@@ -31,7 +31,7 @@ class Family:
     def __init__(self, name: str, path: str):
         self.name = name
         self.path = path
-        self.sections = _load_sections()
+        self.sections = self._load_sections()
 
     def __repr__(self):
         return f"Group(name={self.name}, path={self.path})"
@@ -71,7 +71,7 @@ class Group:
 
     def _load_families(self):
         families = {}
-        for files in os.listdir(self.path):
+        for file in os.listdir(self.path):
             if file.endswith(".csv"):
                 family_name = file.split(".")[0]
                 families[family_name] = Family(family_name, os.path.join(self.path, file))
@@ -104,8 +104,14 @@ groups = {}
 
 for path in DATA_DIRS:
     for group_name in os.listdir(path):
-        group_path = os.path.join(path, group)
+        group_path = os.path.join(path, group_name)
         if os.path.isdir(group_path) and group_name not in groups:
             groups[group_name] = Group(group_name, group_path)
 
+globals().update(groups)
+__all__ = list(groups.keys()) 
+
 # TODO: Add a check for duplicate group names
+# TODO: Add handling for empty group folders
+# TODO: Add handling for empty family csv files
+# BUG: Imports not working
