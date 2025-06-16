@@ -13,15 +13,12 @@ class Section:
         Represents a section, containing properties loaded from a CSV file.
     """
 
-    def __init__(self, name: str, data: dict):
+    def __init__(self, name: str, properties: dict):
         self.name = name
-        self.properties = data
-
-    def __repr__(self):
-        return f"Section(name={self.name}, data={self.data})"
+        self.properties = properties
 
     def __getattr__(self, item):
-        return getattr(item, self.data)
+        return getattr(item, self.properties)
 
 class Family:
     """
@@ -108,10 +105,12 @@ for path in DATA_DIRS:
         if os.path.isdir(group_path) and group_name not in groups:
             groups[group_name] = Group(group_name, group_path)
 
+# Update globals with loaded groups
 globals().update(groups)
-__all__ = list(groups.keys()) 
 
-# TODO: Add a check for duplicate group names
+# Set __all__ to include group names
+__all__ = list(groups.keys())
+
+# TODO: Add handling for duplicate group names
 # TODO: Add handling for empty group folders
 # TODO: Add handling for empty family csv files
-# BUG: Imports not working
